@@ -8,13 +8,17 @@
       v-if="!hasNoAccounts"
       :class="
         cn([
-          'bg-background/95 supports-backdrop-filter:bg-background/80 order-last -mx-6 mt-auto border-t py-2 backdrop-blur',
+          // -mb-8 cancels the two stacked bottom paddings between this bar and the bottom
+          // navbar — PageWrapper's `p-4` and the dashboard layout's `max-md:pb-4` (16px each).
+          // Without it the bar un-sticks 32px above the scrollport at the end of the scroll,
+          // leaving a visible gap above the navbar.
+          'bg-background/95 supports-backdrop-filter:bg-background/80 order-last -mx-6 mt-auto border-t py-2 backdrop-blur max-md:-mb-8',
           isEditMode ? 'z-30 max-md:hidden' : 'z-(--z-navbar)',
           'max-md:right-0 max-md:left-0',
           'sticky md:top-(--header-height)',
           isSafariMobile
             ? isPWA
-              ? 'max-md:bottom-[calc(var(--bottom-navbar-height)-env(safe-area-inset-bottom)-1px)]'
+              ? 'max-md:bottom-0'
               : 'max-md:bottom-[calc(var(--bottom-navbar-height-content-rect)-env(safe-area-inset-bottom)-1px)]'
             : 'max-md:bottom-[calc(env(safe-area-inset-bottom)-1px)]',
           'md:order-first md:mx-0 md:mt-0 md:mb-3 md:border-t-0 md:py-0',
@@ -46,7 +50,9 @@
         @enter="gridRef?.enterEditMode()"
       />
 
-      <DashboardGrid ref="gridRef" :current-period="currentPeriod" />
+      <!-- mb-4 keeps the last widget off the period selector's top border. `mt-auto` on the
+           selector only spaces them while content is short, so the gap has to come from here. -->
+      <DashboardGrid ref="gridRef" :current-period="currentPeriod" class="max-md:mb-4" />
 
       <!-- Mobile: sticky "Done/Cancel" bar at bottom during edit mode -->
       <DashboardEditToolbar
