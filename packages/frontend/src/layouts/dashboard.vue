@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-background flex h-screen max-md:flex-col">
+  <div class="bg-background flex h-dvh max-md:flex-col">
     <template v-if="!isMobileView">
       <SidebarRail v-if="isCollapsed" />
       <Sidebar v-else />
