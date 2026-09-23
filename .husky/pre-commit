@@ -3,6 +3,12 @@
 export NVM_DIR="$HOME/.nvm"
 . "$NVM_DIR/nvm.sh"
 
+# Recorded before `format` runs, because the formatter rewrites files across the
+# whole repo. Only these paths are re-staged afterwards, so a commit carries the
+# formatter's fixes to its own files without absorbing unrelated modifications
+# that merely happen to be present in the working tree.
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+
 npm run format
 
 if git diff --cached --name-only | grep -qE '^packages/frontend/public/(skills/|\.well-known/agent-skills/index\.json)'; then
@@ -10,5 +16,8 @@ if git diff --cached --name-only | grep -qE '^packages/frontend/public/(skills/|
   git add packages/frontend/public/.well-known/agent-skills/index.json
 fi
 
-git add -u
+if [ -n "$STAGED_FILES" ]; then
+  printf '%s\n' "$STAGED_FILES" | xargs -I {} git add -- {}
+fi
+
 npm run lint
