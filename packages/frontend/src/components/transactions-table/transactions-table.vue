@@ -167,7 +167,7 @@
               v-for="column in visibleColumns"
               :key="column.id"
               :class="[
-                'bg-muted overflow-hidden border-b px-3 py-2 whitespace-nowrap',
+                'bg-muted relative overflow-hidden border-b px-3 py-2 whitespace-nowrap',
                 column.align === 'right' ? 'text-right' : 'text-left',
               ]"
               :style="{ width: `${column.widthPx}px` }"
@@ -187,6 +187,26 @@
                   <ArrowDownIcon v-else class="size-3 shrink-0" />
                 </template>
               </component>
+
+              <!-- Resize grip. `touch-none` stops a drag from being claimed by the
+                   scroll container, and pointer capture keeps move/up events aimed
+                   here once the pointer leaves the 6px strip. `stop` on click keeps
+                   the drag from also firing the header's sort toggle. -->
+              <span
+                :class="[
+                  'absolute inset-y-0 right-0 z-1 w-1.5 cursor-col-resize touch-none select-none',
+                  'hover:bg-primary/40',
+                  resizingColumnId === column.id && 'bg-primary/60',
+                ]"
+                role="separator"
+                :aria-label="$t('transactions.table.columnConfig.resizeColumn', { column: $t(column.labelKey) })"
+                @pointerdown="onResizeStart({ column, event: $event })"
+                @pointermove="onResizeMove"
+                @pointerup="onResizeEnd"
+                @pointercancel="onResizeEnd"
+                @click.stop
+                @dblclick.stop="emit('reset-column-width', column.id)"
+              />
             </th>
           </tr>
         </thead>
@@ -315,7 +335,38 @@ const emit = defineEmits<{
   'fetch-next-page': [];
   'update:sorting': [value: TableSorting];
   'reset-filters': [];
+  'resize-column': [value: { id: string; widthPx: number }];
+  'reset-column-width': [id: string];
 }>();
+
+// Header column resizing. The width the page hands back arrives as a prop, so the
+// drag only ever emits – `resizeState` is the pointer's own origin, not a width.
+const resizeState = ref<{ id: string; startX: number; startWidthPx: number } | null>(null);
+const resizingColumnId = computed(() => resizeState.value?.id ?? null);
+
+const onResizeStart = ({ column, event }: { column: ColumnDefinition; event: PointerEvent }) => {
+  // Suppresses the text selection a header drag would otherwise start.
+  event.preventDefault();
+  (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
+  resizeState.value = { id: column.id, startX: event.clientX, startWidthPx: column.widthPx };
+};
+
+const onResizeMove = (event: PointerEvent) => {
+  const state = resizeState.value;
+  if (!state) return;
+  // Right-aligned columns still grow rightwards: the handle sits on the column's
+  // right edge either way, so the delta needs no sign flip.
+  emit('resize-column', { id: state.id, widthPx: state.startWidthPx + (event.clientX - state.startX) });
+};
+
+const onResizeEnd = (event: PointerEvent) => {
+  if (!resizeState.value) return;
+  // pointercancel has already dropped the capture implicitly, and releasing a
+  // pointer that is no longer captured throws.
+  const handle = event.currentTarget as HTMLElement;
+  if (handle.hasPointerCapture(event.pointerId)) handle.releasePointerCapture(event.pointerId);
+  resizeState.value = null;
+};
 
 const tableMinWidthPx = computed(
   () => CHECKBOX_COLUMN_WIDTH_PX + props.visibleColumns.reduce((sum, column) => sum + column.widthPx, 0),

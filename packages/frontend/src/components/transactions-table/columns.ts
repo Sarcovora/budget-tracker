@@ -15,6 +15,7 @@ export enum TABLE_COLUMN {
   account = 'account',
   category = 'category',
   payee = 'payee',
+  paymentType = 'paymentType',
   amount = 'amount',
   refAmount = 'refAmount',
   originalAmount = 'originalAmount',
@@ -32,8 +33,10 @@ export interface ColumnDefinition {
   /** Backend sort field; undefined = column is not sortable. */
   sortField?: TRANSACTION_SORT_FIELD;
   /**
-   * Fixed column width. The table uses table-fixed layout so virtualized rows
-   * mounting during scroll can never re-measure (and widen) columns.
+   * Column width. The table uses table-fixed layout so virtualized rows mounting
+   * during scroll can never re-measure (and widen) columns. This is the default
+   * the header's resize handle starts from; a user-dragged width overrides it
+   * (see `useTableColumns`).
    */
   widthPx: number;
   align: 'left' | 'right';
@@ -96,6 +99,12 @@ const COLUMN_DEFINITIONS: ColumnDefinition[] = [
     align: 'left',
   },
   {
+    id: TABLE_COLUMN.paymentType,
+    labelKey: 'transactions.table.columns.paymentType',
+    widthPx: 144,
+    align: 'left',
+  },
+  {
     id: TABLE_COLUMN.note,
     labelKey: 'transactions.table.columns.note',
     sortField: TRANSACTION_SORT_FIELD.note,
@@ -154,3 +163,19 @@ export const COLUMN_DEFINITIONS_BY_ID: Record<TABLE_COLUMN, ColumnDefinition> = 
 ) as Record<TABLE_COLUMN, ColumnDefinition>;
 
 export const isKnownColumnId = (id: string): id is TABLE_COLUMN => id in COLUMN_DEFINITIONS_BY_ID;
+
+/**
+ * Bounds the header's resize handle clamps a dragged width to. The lower bound
+ * keeps a column wide enough to still show its sort arrow; the upper one stops a
+ * single column from pushing every other one off the horizontal scroll.
+ */
+export const MIN_COLUMN_WIDTH_PX = 64;
+export const MAX_COLUMN_WIDTH_PX = 640;
+
+/**
+ * A dragged width, rounded and held inside the resize bounds. Rounding matters
+ * because the raw value is a pointer delta, and a fractional `width` on a
+ * table-fixed column makes neighbouring cell borders land on half pixels.
+ */
+export const clampColumnWidth = (widthPx: number): number =>
+  Math.round(Math.min(MAX_COLUMN_WIDTH_PX, Math.max(MIN_COLUMN_WIDTH_PX, widthPx)));

@@ -82,7 +82,7 @@
       </div>
 
       <div class="ml-auto flex items-center gap-2">
-        <DesktopOnlyTooltip :content="$t('header.feedback')" :disabled="!isHeaderBarCompact">
+        <DesktopOnlyTooltip v-if="isFeedbackVisible" :content="$t('header.feedback')" :disabled="!isHeaderBarCompact">
           <span class="inline-flex">
             <FeedbackDialog>
               <Button
@@ -117,10 +117,12 @@
           </Button>
         </DesktopOnlyTooltip>
 
+        <!-- A connection needing re-link is an error the user has to act on, so it
+             renders even when the sync button is hidden from the header. -->
         <template v-if="accountsNeedingRelink.length > 0">
           <AccountsRelinkWarning />
         </template>
-        <template v-else>
+        <template v-else-if="isBankSyncVisible">
           <Popover.Popover v-model:open="isPopoverOpen">
             <Popover.PopoverTrigger as-child>
               <Button variant="secondary" size="icon" :aria-label="syncButtonLabel">
@@ -196,6 +198,7 @@ import { useCategorizationStatus } from '@/composable/use-categorization-status'
 import { useCssVarFromElementSize } from '@/composable/use-css-var-from-element-size';
 import { useDateLocale } from '@/composable/use-date-locale';
 import { useFeedbackAttention } from '@/composable/use-feedback-attention';
+import { useHeaderButtons } from '@/composable/use-header-buttons';
 import { useIdleEnabled } from '@/composable/use-idle-enabled';
 import { useSupportButton } from '@/composable/use-support-button';
 import { useSyncStatus } from '@/composable/use-sync-status';
@@ -249,6 +252,8 @@ const showConfirmDialog = ref(false);
 const isPopoverOpen = ref(false);
 
 const { isPulsing: isFeedbackPulsing, onEnter: onFeedbackEnter, onClick: onFeedbackClick } = useFeedbackAttention();
+
+const { isFeedbackVisible, isBankSyncVisible } = useHeaderButtons();
 
 // Mirror the `@[890px]/header-bar` container query that toggles the feedback
 // button's label — tooltip is only useful in the icon-only state.

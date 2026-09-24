@@ -15,7 +15,10 @@
       "header": {
         "title": "Header",
         "description": "Choose which header actions are visible.",
-        "supportButton": "Support button"
+        "feedbackButton": "Send feedback button",
+        "bankSyncButton": "Bank sync button",
+        "supportButton": "Support button",
+        "perDeviceHint": "The Send feedback and Bank sync toggles apply to this device only."
       },
       "currency": {
         "title": "Currency symbols",

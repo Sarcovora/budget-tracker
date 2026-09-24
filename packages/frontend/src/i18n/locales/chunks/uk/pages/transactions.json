@@ -185,6 +185,7 @@
         "account": "Рахунок",
         "category": "Категорія",
         "payee": "Отримувач",
+        "paymentType": "Тип платежу",
         "amount": "Сума",
         "refAmount": "Базова сума",
         "originalAmount": "Оригінальна сума",
@@ -203,7 +204,8 @@
         "title": "Параметри таблиці",
         "columns": "Стовпці",
         "visibleCount": "{count} видимо",
-        "resetDefaults": "Скинути за замовчуванням"
+        "resetDefaults": "Скинути за замовчуванням",
+        "resizeColumn": "Змінити ширину стовпця «{column}»"
       },
       "categorizationSourceValues": {
         "manual": "Вручну",

@@ -317,6 +317,8 @@
               @update:sorting="onSortingChange"
               @fetch-next-page="fetchNextPage"
               @reset-filters="resetFilters"
+              @resize-column="setColumnWidth"
+              @reset-column-width="resetColumnWidth"
             />
           </Card>
         </div>
@@ -372,7 +374,15 @@ const {
   transactionsListRef,
 } = useTransactionsWithFilters({ sorting });
 
-const { visibleColumns, configurableColumns, toggleColumn, reorderColumns, resetToDefaults } = useTableColumns();
+const {
+  visibleColumns,
+  configurableColumns,
+  toggleColumn,
+  reorderColumns,
+  setColumnWidth,
+  resetColumnWidth,
+  resetToDefaults,
+} = useTableColumns();
 
 // Mobile mode keys off the content container, not the viewport – the sidebar
 // eats ~300px, so viewport breakpoints would flip at the wrong widths.

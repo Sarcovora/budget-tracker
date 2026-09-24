@@ -47,7 +47,7 @@
       <template v-else-if="column.id === TABLE_COLUMN.account">
         <div class="flex items-center gap-1.5">
           <AccountLogo v-if="accountFrom" :account="accountFrom" class="size-5 shrink-0" />
-          <span class="max-w-36 truncate">{{ accountFrom?.name }}</span>
+          <span class="min-w-0 truncate">{{ accountFrom?.name }}</span>
           <template v-if="isTwoLegTransferRow">
             <ArrowRightIcon :size="13" class="shrink-0 opacity-60" />
             <AccountLogo
@@ -55,7 +55,7 @@
               :account="transferDestinationAccount"
               class="size-5 shrink-0"
             />
-            <span class="max-w-36 truncate">{{ transferDestinationName }}</span>
+            <span class="min-w-0 truncate">{{ transferDestinationName }}</span>
           </template>
           <template v-else-if="isOutOfWalletTransfer">
             <ArrowRightIcon :size="13" class="shrink-0 opacity-60" />
@@ -64,7 +64,7 @@
           <template v-else-if="isPortfolioLinked">
             <ArrowRightIcon :size="13" class="shrink-0 opacity-60" />
             <BriefcaseIcon :size="13" class="text-app-transfer-color shrink-0" />
-            <span class="max-w-36 truncate">{{ portfolioName }}</span>
+            <span class="min-w-0 truncate">{{ portfolioName }}</span>
           </template>
         </div>
       </template>
@@ -74,7 +74,7 @@
         <div class="flex items-center gap-2">
           <template v-if="!isTransferRow && category">
             <CategoryCircle :category="category" />
-            <span class="max-w-32 truncate">{{ category.name }}</span>
+            <span class="min-w-0 truncate">{{ category.name }}</span>
           </template>
           <span v-else class="text-muted-foreground">—</span>
           <AttachmentIndicator :transaction="tx" />
@@ -92,9 +92,15 @@
             class="size-5 shrink-0"
           />
           <DesktopOnlyTooltip :content="payee.name" only-when-truncated>
-            <span class="max-w-32 truncate">{{ payee.name }}</span>
+            <span class="min-w-0 truncate">{{ payee.name }}</span>
           </DesktopOnlyTooltip>
         </div>
+        <span v-else class="text-muted-foreground">—</span>
+      </template>
+
+      <!-- Payment type -->
+      <template v-else-if="column.id === TABLE_COLUMN.paymentType">
+        <span v-if="paymentTypeLabel" class="block truncate">{{ paymentTypeLabel }}</span>
         <span v-else class="text-muted-foreground">—</span>
       </template>
 
@@ -117,8 +123,8 @@
 
       <!-- Note -->
       <template v-else-if="column.id === TABLE_COLUMN.note">
-        <DesktopOnlyTooltip v-if="tx.note" :content="tx.note">
-          <span class="text-muted-foreground block max-w-40 truncate">{{ tx.note }}</span>
+        <DesktopOnlyTooltip v-if="tx.note" :content="tx.note" only-when-truncated>
+          <span class="text-muted-foreground block truncate">{{ tx.note }}</span>
         </DesktopOnlyTooltip>
       </template>
 
@@ -127,12 +133,14 @@
         <DesktopOnlyTooltip v-if="txTags.length" :disabled="txTags.length <= 1">
           <div class="flex items-center gap-1">
             <span
-              class="inline-block max-w-37.5 truncate rounded-full px-2 py-0.5 text-xs font-medium text-white/90"
+              class="inline-block min-w-0 truncate rounded-full px-2 py-0.5 text-xs font-medium text-white/90"
               :style="{ backgroundColor: txTags[0]!.color }"
             >
               {{ txTags[0]!.name }}
             </span>
-            <span v-if="hiddenTagsCount > 0" class="text-muted-foreground text-xs">+{{ hiddenTagsCount }}</span>
+            <span v-if="hiddenTagsCount > 0" class="text-muted-foreground shrink-0 text-xs">
+              +{{ hiddenTagsCount }}
+            </span>
           </div>
           <template #content>
             <ScrollArea class="max-h-75">
@@ -160,7 +168,7 @@
 
       <!-- Group -->
       <template v-else-if="column.id === TABLE_COLUMN.group">
-        <span v-if="groupName" class="max-w-32 truncate">{{ groupName }}</span>
+        <span v-if="groupName" class="block truncate">{{ groupName }}</span>
       </template>
 
       <!-- Refund indicator -->
@@ -181,6 +189,7 @@ import AccountLogo from '@/components/common/account-logo.vue';
 import BrandLogo from '@/components/common/brand-logo.vue';
 import CategoryCircle from '@/components/common/category-circle.vue';
 import ResponsiveTooltip from '@/components/common/responsive-tooltip.vue';
+import { VERBOSE_PAYMENT_TYPES } from '@/common/const';
 import { Checkbox } from '@/components/lib/ui/checkbox';
 import { ScrollArea } from '@/components/lib/ui/scroll-area';
 import { DesktopOnlyTooltip } from '@/components/lib/ui/tooltip';
@@ -284,6 +293,13 @@ const txTags = computed(() => props.tx.tags ?? []);
 const hiddenTagsCount = computed(() => Math.max(0, txTags.value.length - MAX_VISIBLE_TAGS));
 
 const groupName = computed(() => props.tx.transactionGroups?.[0]?.name);
+
+// Rows imported before a payment type existed, and any value the registry does
+// not cover, fall through to the em dash rather than printing a raw enum key.
+const paymentTypeLabel = computed(() => {
+  const paymentType = VERBOSE_PAYMENT_TYPES.find((item) => item.value === props.tx.paymentType);
+  return paymentType ? t(paymentType.label) : '';
+});
 
 const categorizationSourceLabel = computed(() => {
   const source = props.tx.categorizationMeta?.source as CATEGORIZATION_SOURCE | undefined;

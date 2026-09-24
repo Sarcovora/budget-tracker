@@ -1,5 +1,5 @@
 import { useUserSettings } from '@/composable/data-queries/user-settings';
-import { useDebounceFn } from '@vueuse/core';
+import { useDebounceFn, useLocalStorage } from '@vueuse/core';
 import { computed, ref, watch } from 'vue';
 
 import {
@@ -8,10 +8,18 @@ import {
   DEFAULT_COLUMN_ORDER,
   DEFAULT_VISIBLE_COLUMNS,
   TABLE_COLUMN,
+  clampColumnWidth,
   isKnownColumnId,
 } from './columns';
 
 const PERSIST_DEBOUNCE_MS = 1_000;
+
+/**
+ * Widths live in localStorage rather than UserSettings: a comfortable column
+ * width is a property of the screen it is being read on, so a width dragged on a
+ * wide desktop display should not follow the user onto a phone.
+ */
+const COLUMN_WIDTHS_STORAGE_KEY = 'transactions-table:column-widths';
 
 /**
  * Column visibility + order for the transactions table, persisted in
@@ -19,6 +27,9 @@ const PERSIST_DEBOUNCE_MS = 1_000;
  * dropped on read (a removed column must not break the table); known columns
  * missing from a stored order are appended in registry order so newly shipped
  * columns appear for existing users.
+ *
+ * Per-column widths are layered on top from localStorage — see
+ * `COLUMN_WIDTHS_STORAGE_KEY`.
  */
 export function useTableColumns() {
   const { data: userSettings, patch: patchSettings } = useUserSettings();
@@ -57,9 +68,19 @@ export function useTableColumns() {
     persistDebounced();
   };
 
+  const columnWidths = useLocalStorage<Partial<Record<TABLE_COLUMN, number>>>(COLUMN_WIDTHS_STORAGE_KEY, {});
+
+  /** A definition carrying the user's dragged width in place of the registry default. */
+  const withUserWidth = (definition: ColumnDefinition): ColumnDefinition => {
+    const width = columnWidths.value[definition.id];
+    return width === undefined ? definition : { ...definition, widthPx: width };
+  };
+
   /** Columns to render, in user order. */
   const visibleColumns = computed<ColumnDefinition[]>(() =>
-    localOrder.value.filter((id) => localVisible.value.includes(id)).map((id) => COLUMN_DEFINITIONS_BY_ID[id]),
+    localOrder.value
+      .filter((id) => localVisible.value.includes(id))
+      .map((id) => withUserWidth(COLUMN_DEFINITIONS_BY_ID[id])),
   );
 
   /** All columns in user order, with visibility flag — for the config panel. */
@@ -87,9 +108,22 @@ export function useTableColumns() {
     markEditedAndPersist();
   };
 
+  const setColumnWidth = ({ id, widthPx }: { id: string; widthPx: number }) => {
+    if (!isKnownColumnId(id)) return;
+    columnWidths.value = { ...columnWidths.value, [id]: clampColumnWidth(widthPx) };
+  };
+
+  /** Drops one column back to its registry width (the header handle's double-click). */
+  const resetColumnWidth = (id: string) => {
+    if (!isKnownColumnId(id)) return;
+    const { [id]: _removed, ...rest } = columnWidths.value;
+    columnWidths.value = rest;
+  };
+
   const resetToDefaults = () => {
     localOrder.value = [...DEFAULT_COLUMN_ORDER];
     localVisible.value = [...DEFAULT_VISIBLE_COLUMNS];
+    columnWidths.value = {};
     markEditedAndPersist();
   };
 
@@ -98,6 +132,8 @@ export function useTableColumns() {
     configurableColumns,
     toggleColumn,
     reorderColumns,
+    setColumnWidth,
+    resetColumnWidth,
     resetToDefaults,
   };
 }

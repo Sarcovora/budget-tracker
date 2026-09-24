@@ -90,17 +90,33 @@
         </div>
       </div>
 
-      <template v-if="isSupportButtonAvailable">
-        <Separator />
+      <Separator />
 
-        <!-- Header -->
-        <div>
-          <h3 class="mb-2 text-lg font-medium">{{ $t('settings.appearance.header.title') }}</h3>
-          <p class="mb-4 text-sm leading-relaxed">
-            {{ $t('settings.appearance.header.description') }}
-          </p>
+      <!-- Header -->
+      <div>
+        <h3 class="mb-2 text-lg font-medium">{{ $t('settings.appearance.header.title') }}</h3>
+        <p class="mb-4 text-sm leading-relaxed">
+          {{ $t('settings.appearance.header.description') }}
+        </p>
+
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center justify-between gap-4">
+            <span class="flex items-center gap-2 text-sm">
+              <MessageSquareIcon class="text-muted-foreground size-4 shrink-0" />
+              {{ $t('settings.appearance.header.feedbackButton') }}
+            </span>
+            <Switch v-model="isFeedbackVisible" />
+          </div>
 
           <div class="flex items-center justify-between gap-4">
+            <span class="flex items-center gap-2 text-sm">
+              <CloudCheckIcon class="text-muted-foreground size-4 shrink-0" />
+              {{ $t('settings.appearance.header.bankSyncButton') }}
+            </span>
+            <Switch v-model="isBankSyncVisible" />
+          </div>
+
+          <div v-if="isSupportButtonAvailable" class="flex items-center justify-between gap-4">
             <span class="flex items-center gap-2 text-sm">
               <HeartIcon class="text-heart size-4 shrink-0 fill-current" />
               {{ $t('settings.appearance.header.supportButton') }}
@@ -112,7 +128,13 @@
             />
           </div>
         </div>
-      </template>
+
+        <!-- These two are stored on the device, not the account: the same header is
+             read on a phone and a wide display, where different buttons earn their space. -->
+        <p class="text-muted-foreground mt-3 text-xs">
+          {{ $t('settings.appearance.header.perDeviceHint') }}
+        </p>
+      </div>
     </CardContent>
   </Card>
 </template>
@@ -125,12 +147,24 @@ import { Card, CardContent, CardHeader } from '@/components/lib/ui/card';
 import { Separator } from '@/components/lib/ui/separator';
 import { Switch } from '@/components/lib/ui/switch';
 import { useUserSettings } from '@/composable/data-queries/user-settings';
+import { useHeaderButtons } from '@/composable/use-header-buttons';
 import { TOGGLEABLE_SIDEBAR_SECTIONS, useSidebarSections } from '@/composable/use-sidebar-sections';
 import { useSupportButton } from '@/composable/use-support-button';
-import { CoinsIcon, HeartIcon, InfoIcon, LayersIcon, MonitorIcon, MoonStarIcon, SunIcon } from '@lucide/vue';
+import {
+  CloudCheckIcon,
+  CoinsIcon,
+  HeartIcon,
+  InfoIcon,
+  LayersIcon,
+  MessageSquareIcon,
+  MonitorIcon,
+  MoonStarIcon,
+  SunIcon,
+} from '@lucide/vue';
 import { type Component } from 'vue';
 
 const { sidebarSections, toggleSection, isUpdating } = useSidebarSections();
+const { isFeedbackVisible, isBankSyncVisible } = useHeaderButtons();
 const {
   isSupportButtonAvailable,
   isSupportButtonVisible,

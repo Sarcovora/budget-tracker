@@ -185,6 +185,7 @@
         "account": "Account",
         "category": "Category",
         "payee": "Payee",
+        "paymentType": "Payment type",
         "amount": "Amount",
         "refAmount": "Base amount",
         "originalAmount": "Original amount",
@@ -203,7 +204,8 @@
         "title": "Table settings",
         "columns": "Columns",
         "visibleCount": "{count} visible",
-        "resetDefaults": "Reset to defaults"
+        "resetDefaults": "Reset to defaults",
+        "resizeColumn": "Resize {column} column"
       },
       "categorizationSourceValues": {
         "manual": "Manual",
