@@ -1,0 +1,10 @@
+# Overlay for running the dev instance on an Apple Silicon Mac. Not part of the
+# base compose set — pass it explicitly with -f alongside the base files.
+#
+# currency-rates-api publishes an amd64-only image, so it needs Rosetta
+# emulation here. Backend and frontend are built from source and come out
+# native arm64, so they are deliberately left alone.
+
+services:
+  currency-rates-api:
+    platform: linux/amd64

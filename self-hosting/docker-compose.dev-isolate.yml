@@ -1,0 +1,15 @@
+# Dev-only overlay: give this stack its own network.
+#
+# The base compose file pins the network name to a fixed `budget-tracker` so
+# external reverse proxies can join it. That fixed name is NOT project-scoped,
+# so a second stack on the same host would share the prod network and resolve
+# service names like `db` to prod containers — a dev backend would then run its
+# migrations against the production database. Renaming it here keeps dev fully
+# isolated from the production stack.
+#
+# Pass it on every dev `docker compose` invocation, alongside the base files.
+# Containers keep the network they were created with, so add `--force-recreate`
+# when attaching this to a stack that is already running.
+networks:
+  budget-tracker:
+    name: budget-tracker-dev
