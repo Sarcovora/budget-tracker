@@ -30,12 +30,33 @@
         </template>
 
         <div class="flex items-center gap-px">
-          <ManageTransactionDialog>
-            <Button variant="default" size="sm" class="rounded-r-none">
-              <PlusIcon class="size-4" />
-              {{ isMobileView ? $t('header.add') : $t('header.newTransaction') }}
-            </Button>
-          </ManageTransactionDialog>
+          <DesktopOnlyTooltip :disabled="!isNewTransactionShortcutEnabled">
+            <span class="inline-flex">
+              <ManageTransactionDialog v-model:open="isNewTransactionOpen">
+                <Button
+                  variant="default"
+                  size="sm"
+                  class="rounded-r-none"
+                  :aria-keyshortcuts="
+                    isNewTransactionShortcutEnabled ? newTransactionShortcutKey.toUpperCase() : undefined
+                  "
+                >
+                  <PlusIcon class="size-4" />
+                  {{ isMobileView ? $t('header.add') : $t('header.newTransaction') }}
+                </Button>
+              </ManageTransactionDialog>
+            </span>
+            <template #content>
+              <span class="inline-flex items-center gap-2">
+                {{ $t('header.newTransaction') }}
+                <kbd
+                  class="bg-muted text-muted-foreground border-border inline-flex h-5 items-center rounded border px-1.5 font-mono text-xs uppercase"
+                >
+                  {{ newTransactionShortcutKey }}
+                </kbd>
+              </span>
+            </template>
+          </DesktopOnlyTooltip>
 
           <Popover.Popover v-model:open="isAddMenuOpen">
             <Popover.PopoverTrigger as-child>
@@ -200,6 +221,7 @@ import { useDateLocale } from '@/composable/use-date-locale';
 import { useFeedbackAttention } from '@/composable/use-feedback-attention';
 import { useHeaderButtons } from '@/composable/use-header-buttons';
 import { useIdleEnabled } from '@/composable/use-idle-enabled';
+import { useNewTransactionShortcut } from '@/composable/use-new-transaction-shortcut';
 import { useSupportButton } from '@/composable/use-support-button';
 import { useSyncStatus } from '@/composable/use-sync-status';
 import { CUSTOM_BREAKPOINTS, useWindowBreakpoints } from '@/composable/window-breakpoints';
@@ -229,6 +251,9 @@ const AttachInvoiceDialog = defineAsyncComponent(() => import('@/components/dial
 
 const userStore = useUserStore();
 const isAddMenuOpen = ref(false);
+const isNewTransactionOpen = ref(false);
+const { isEnabled: isNewTransactionShortcutEnabled, shortcutKey: newTransactionShortcutKey } =
+  useNewTransactionShortcut({ onTrigger: () => (isNewTransactionOpen.value = true) });
 const isAttachInvoiceMounted = ref(false);
 const isAttachInvoiceOpen = ref(false);
 

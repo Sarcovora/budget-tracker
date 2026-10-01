@@ -116,9 +116,9 @@
           </div>
         </template>
         <template v-else>
-          <div :class="['flex items-center gap-2', compact && 'shrink-0']">
-            <span class="text-sm tracking-wider whitespace-nowrap">
-              {{ category ? category.name : t('common.ui.other') }}
+          <div :class="['flex items-center gap-2', compact && (payeeName ? 'max-w-3/5 min-w-0' : 'shrink-0')]">
+            <span :class="['text-sm tracking-wider', payeeName ? 'min-w-0 truncate' : 'whitespace-nowrap']">
+              {{ payeeName ?? categoryLabel }}
             </span>
             <ResponsiveTooltip
               v-if="addedByTooltip"
@@ -177,7 +177,7 @@
               : 'text-muted-foreground line-clamp-1 text-sm tracking-wider [word-break:break-word]'
           "
         >
-          {{ transaction.note }}
+          {{ secondaryLine }}
         </span>
       </div>
     </div>
@@ -226,6 +226,7 @@ import { Checkbox } from '@/components/lib/ui/checkbox';
 import { isHttpUrl } from '@/common/utils/external-url';
 import { buildMapUrl } from '@/common/utils/map-url';
 import { useOppositeTxRecord } from '@/composable/data-queries/opposite-tx-record';
+import { usePayeeLookup } from '@/composable/data-queries/payees';
 import type { BulkUnselectableReason } from '@/composable/transaction-selection';
 import { useTransactionPortfolioLink } from '@/composable/data-queries/portfolio-transfers';
 import { formatUIAmount } from '@/js/helpers';
@@ -336,6 +337,20 @@ const isCompactInline = computed(
 );
 
 const category = computed(() => categoriesMap.value[transaction.value.categoryId]);
+const categoryLabel = computed(() => category.value?.name ?? t('common.ui.other'));
+
+// The payee is the most specific answer to "what was this", so when a regular
+// row has one it becomes the title and the category drops to the secondary
+// line. The category circle keeps the category scannable by color.
+const { byId: payeeById } = usePayeeLookup();
+const payeeName = computed(() => {
+  const { payeeId } = transaction.value;
+  if (!payeeId || isTransferTransaction.value || isPortfolioLinked.value) return undefined;
+  return payeeById.value.get(payeeId)?.name;
+});
+const secondaryLine = computed(() =>
+  payeeName.value ? [categoryLabel.value, transaction.value.note].filter(Boolean).join(' · ') : transaction.value.note,
+);
 const externalLinkHref = computed(() =>
   transaction.value.externalUrl && isHttpUrl(transaction.value.externalUrl) ? transaction.value.externalUrl : null,
 );

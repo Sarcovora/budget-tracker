@@ -79,6 +79,19 @@ export const usePayees = ({
  * beneficiary-column resolution in transaction tables, where `usePayees` would
  * miss payees past its top-50 cutoff.
  */
+// Every transaction row calls usePayeeLookup, so the id map is built once per
+// fetched list and shared, rather than once per row.
+const payeeMaps = new WeakMap<PayeeLookupItem[], Map<string, PayeeLookupItem>>();
+const EMPTY_PAYEE_LIST: PayeeLookupItem[] = [];
+const payeeMapFor = ({ list }: { list: PayeeLookupItem[] }) => {
+  let map = payeeMaps.get(list);
+  if (!map) {
+    map = new Map(list.map((payee) => [payee.id, payee]));
+    payeeMaps.set(list, map);
+  }
+  return map;
+};
+
 export const usePayeeLookup = () => {
   const query = useQuery({
     queryKey: VUE_QUERY_CACHE_KEYS.payeesLookup,
@@ -89,13 +102,9 @@ export const usePayeeLookup = () => {
     staleTime: Infinity,
   });
 
-  const list = computed<PayeeLookupItem[]>(() => query.data.value ?? []);
+  const list = computed<PayeeLookupItem[]>(() => query.data.value ?? EMPTY_PAYEE_LIST);
 
-  const byId = computed<Map<string, PayeeLookupItem>>(() => {
-    const map = new Map<string, PayeeLookupItem>();
-    for (const payee of list.value) map.set(payee.id, payee);
-    return map;
-  });
+  const byId = computed<Map<string, PayeeLookupItem>>(() => payeeMapFor({ list: list.value }));
 
   const nameById = computed<Record<string, string>>(() =>
     Object.fromEntries(list.value.map((payee) => [payee.id, payee.name])),
