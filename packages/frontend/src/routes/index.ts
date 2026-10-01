@@ -137,6 +137,11 @@ const routes: RouteRecordRaw[] = [
             component: () => import('@/pages/analytics/subpages/net-worth-history/index.vue'),
           },
           {
+            path: 'fire',
+            name: ROUTES_NAMES.analyticsFire,
+            component: () => import('@/pages/analytics/subpages/fire/index.vue'),
+          },
+          {
             path: 'net-worth-drivers',
             name: ROUTES_NAMES.analyticsNetWorthDrivers,
             component: () => import('@/pages/analytics/subpages/net-worth-drivers/index.vue'),
@@ -249,6 +254,12 @@ const routes: RouteRecordRaw[] = [
         path: '/transactions/optimizations/ai-categorization',
         name: ROUTES_NAMES.optimizationsAiCategorization,
         component: () => import('@/pages/optimizations/ai-categorization/index.vue'),
+        meta: { i18nChunks: ['pages/optimizations', 'pages/transactions'] as I18nChunkName[] },
+      },
+      {
+        path: '/transactions/optimizations/reconciliation',
+        name: ROUTES_NAMES.optimizationsReconciliation,
+        component: () => import('@/pages/optimizations/reconciliation/index.vue'),
         meta: { i18nChunks: ['pages/optimizations', 'pages/transactions'] as I18nChunkName[] },
       },
       {

@@ -14,7 +14,9 @@
     "deleteBlockedByLoanPayments": "Questo conto ha pagamenti in prestito. Eliminali o riassegnali prima di eliminare il conto.",
     "loanBalanceUseUpdateLoan": "Cambia il saldo di un prestito dalla sua pagina di prestito, non dalle impostazioni del conto.",
     "loanCategoryImmutable": "La categoria di un conto di prestito non può essere modificata.",
-    "dedicatedFlowCategoryNotAllowed": "I conti dei prestiti e dei veicoli devono essere creati attraverso le pagine dedicate, non attraverso la pagina dei conti generici."
+    "dedicatedFlowCategoryNotAllowed": "I conti dei prestiti e dei veicoli devono essere creati attraverso le pagine dedicate, non attraverso la pagina dei conti generici.",
+    "initialBalanceOnlySystem": "Initial balance can only be changed for manual accounts",
+    "initialAndCurrentBalanceTogether": "Initial balance and current balance can't be changed in the same request"
   },
   "balanceAdjustment": {
     "defaultNote": "Aggiustamento del saldo",
@@ -101,6 +103,26 @@
       "splitNotFound": "Split not found",
       "cannotDeleteWithRefunds": "Cannot delete split that has refunds targeting it",
       "cannotReduceBelowRefunded": "This split has refunds totaling {{refundsText}}. You cannot reduce it below the refunded amount. To reduce further, first unlink the refunds."
+    },
+    "reconciliation": {
+      "systemNotAllowed": "Only bank-connected transactions can be merged or removed.",
+      "plannedNotAllowed": "Planned transactions can't be merged or removed.",
+      "transferNotAllowed": "Linked transfers can't be merged or removed. Unlink the transfer first.",
+      "refundNotAllowed": "Refund-linked transactions can't be merged or removed. Unlink the refund first.",
+      "survivorPending": "Pick the booked transaction as the one to keep. A pending survivor would stay stuck as pending.",
+      "survivorNotSelected": "The transaction to keep must be one of the selected transactions.",
+      "differentAccounts": "Only transactions from the same account can be merged.",
+      "budgetConflict": "The selected transactions belong to different budgets. Align their budgets before merging.",
+      "groupConflict": "The selected transactions belong to different transaction groups. Align their groups before merging.",
+      "subscriptionConflict": "The selected transactions are linked to different subscriptions. Align their subscriptions before merging.",
+      "accountDisconnected": "Can't restore: the account is no longer connected to the bank.",
+      "bankCheckUnsupported": "Checking with the bank is only available for Enable Banking accounts.",
+      "notPending": "Only pending transactions can be kept as booked.",
+      "stuckPendingNotification": {
+        "title": "Some card payments haven't cleared",
+        "message_one": "1 transaction has been pending for over a week. Check it with your bank so your balance stays accurate.",
+        "message_other": "{{count}} transactions have been pending for over a week. Check them with your bank so your balance stays accurate."
+      }
     }
   },
   "budgets": {
@@ -351,8 +373,23 @@
     "defaultCurrencyNotPresent": "Cannot delete currency. Default currency is not present in the system"
   },
   "ai": {
-    "apiKeyValidationFailed": "API key validation failed",
-    "noApiKeyForProvider": "No API key configured for provider: {{provider}}",
+    "connectionNotFound": "AI model not found.",
+    "connectionNameTaken": "You already have an AI model with this name.",
+    "connectionLimitReached": "You can add up to {{max}} AI models.",
+    "connectionNameInvalidLength": "Name must be between 1 and {{max}} characters.",
+    "connectionModelRequired": "Enter a model name.",
+    "connectionBaseUrlRequired": "Enter the base URL of your OpenAI-compatible server.",
+    "connectionBaseUrlNotAllowed": "This provider always uses its official API address, so it doesn't take a base URL.",
+    "connectionApiKeyRequired": "Enter the API key.",
+    "connectionProviderMismatch": "That AI model uses a different provider.",
+    "connectionKeySourceMissing": "The AI model you're copying from has no API key. Enter one.",
+    "connectionStoredKeyUnreadable": "The API key saved for this AI model can no longer be read. Enter it again.",
+    "connectionKeyRejected": "The provider rejected this API key. Check that it's correct, active, and has credits.",
+    "connectionModelNotAvailable": "This API key can't use the model \"{{model}}\". Check the model name.",
+    "connectionProviderUnreachable": "Couldn't reach the provider. Try again in a moment.",
+    "connectionValidationFailed": "The provider refused the test request: {{reason}}",
+    "serverModelUnavailable": "The included MoneyMatter AI model isn't available on your plan.",
+    "connectionKeyNotInBackup": "API key isn't included in backups. Edit this model and enter the key again.",
     "customEndpointUnreachable": "Could not reach the endpoint. Check the base URL and make sure the server is running and reachable from the internet.",
     "customEndpointAuthFailed": "The endpoint rejected the API key. Check that the key is correct and has the required permissions.",
     "customEndpointModelNotFound": "The endpoint does not serve a model named \"{{model}}\".",
@@ -360,16 +397,9 @@
     "customEndpointMoreModels": "and {{count}} more",
     "customEndpointNotApiResponse": "The server at this URL answered with HTTP {{status}} instead of an OpenAI-compatible response. Check that the server is running and that the base URL is correct — it usually ends with /v1.",
     "customEndpointValidationFailed": "The endpoint did not return a usable response. Check the base URL, model name and API key.",
-    "customEndpointMissingFields": "A base URL and a model name are required.",
-    "customEndpointNameTaken": "You already have an endpoint with this name.",
-    "customEndpointNameInvalidLength": "Endpoint name must be between 1 and 50 characters.",
-    "customEndpointNotFound": "Custom endpoint not found.",
-    "customEndpointIdRequired": "Select which custom endpoint serves this model.",
-    "customModelNameInvalidLength": "The model name must be between 1 and 200 characters.",
-    "customEndpointLimitReached": "You can store up to {{max}} custom endpoints. Remove one before adding another.",
-    "customEndpointStoredKeyUnreadable": "The saved API key for this endpoint can no longer be read. Please enter it again.",
     "categorizationAlreadyRunning": "AI categorization is already running. Wait for it to finish before starting another run.",
-    "categorizationRateLimited": "You've started AI categorization too many times recently. Please try again later."
+    "categorizationRateLimited": "You've started AI categorization too many times recently. Please try again later.",
+    "customInstructionsNeedConnection": "Add an AI model in Settings → AI to use custom instructions."
   },
   "middleware": {
     "tooManyRequests": "Too many requests. Please try again later."
@@ -554,6 +584,13 @@
     "unsupportedFileType": "Unsupported file type. Upload a JPEG, PNG, WebP or PDF file.",
     "tooManyAttachments": "A transaction can hold at most {{max}} attachments.",
     "quotaExceeded": "Attachment storage quota exceeded.",
+    "noFileUploaded": "No file was uploaded."
+  },
+  "invoiceMatching": {
+    "unsupportedFileType": "Unsupported file type. Upload a JPEG, PNG, WebP or PDF invoice.",
+    "notAnInvoice": "This document does not look like an invoice or a receipt.",
+    "incompleteInvoice": "Could not read a vendor, total amount and date from this invoice.",
+    "pdfWithoutText": "Custom AI connections can't receive PDF files directly, and this one couldn't be opened to convert it (for example, it's password-protected). Convert it to an image (PNG or JPEG), such as a screenshot of the invoice, and upload that instead.",
     "noFileUploaded": "No file was uploaded."
   }
 }

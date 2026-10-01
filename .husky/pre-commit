@@ -1,23 +1,23 @@
 #!/bin/sh
 
-export NVM_DIR="$HOME/.nvm"
-. "$NVM_DIR/nvm.sh"
+NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
-# Recorded before `format` runs, because the formatter rewrites files across the
-# whole repo. Only these paths are re-staged afterwards, so a commit carries the
-# formatter's fixes to its own files without absorbing unrelated modifications
-# that merely happen to be present in the working tree.
-STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+# Only fully staged files are formatted and re-staged. A partially staged file is left
+# alone, so the hunks kept out of the commit with `git add -p` stay out.
+unstaged=$(mktemp)
+git diff --name-only > "$unstaged"
+fully_staged=$(git diff --cached --name-only --diff-filter=ACMR | grep -vxF -f "$unstaged" || true)
+rm -f "$unstaged"
 
-npm run format
-
-if git diff --cached --name-only | grep -qE '^packages/frontend/public/(skills/|\.well-known/agent-skills/index\.json)'; then
-  node scripts/regen-agent-skills-index.mjs
-  git add packages/frontend/public/.well-known/agent-skills/index.json
+if [ -n "$fully_staged" ]; then
+  printf '%s\n' "$fully_staged" | tr '\n' '\0' | xargs -0 oxfmt --no-error-on-unmatched-pattern
+  printf '%s\n' "$fully_staged" | tr '\n' '\0' | xargs -0 git add
 fi
 
-if [ -n "$STAGED_FILES" ]; then
-  printf '%s\n' "$STAGED_FILES" | xargs -I {} git add -- {}
+if printf '%s\n' "$fully_staged" | grep -qE '^packages/frontend/public/(skills/|\.well-known/agent-skills/index\.json)'; then
+  node scripts/regen-agent-skills-index.mjs
+  git add packages/frontend/public/.well-known/agent-skills/index.json
 fi
 
 npm run lint

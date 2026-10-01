@@ -104,6 +104,7 @@
           </div>
           <p :class="cn('text-muted-foreground', isCompactLayout ? 'mt-0.5 text-xs leading-snug' : 'text-sm')">
             {{ activeTab.description }}
+            <DocsLink v-if="activeTab.docsPath" :path="activeTab.docsPath" />
           </p>
         </div>
         <div :id="ANALYTICS_HEADER_ACTIONS_ID" class="shrink-0" />
@@ -115,6 +116,7 @@
 </template>
 
 <script setup lang="ts">
+import DocsLink from '@/components/common/docs-link.vue';
 import { DesktopOnlyTooltip } from '@/components/lib/ui/tooltip';
 import { useAfterMountTransition } from '@/composable/use-after-mount-transition';
 import { CUSTOM_BREAKPOINTS, useWindowBreakpoints } from '@/composable/window-breakpoints';
@@ -128,6 +130,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   DollarSignIcon,
+  FlameIcon,
   PanelLeftCloseIcon,
   PanelLeftOpenIcon,
   PiggyBankIcon,
@@ -144,6 +147,7 @@ interface Tab {
   name: string;
   label: string;
   description: string;
+  docsPath?: string;
   to: { name: string };
   icon: Component;
 }
@@ -196,6 +200,7 @@ const sections = computed<NavSection[]>(() => [
         name: 'trends-comparison',
         label: t('analytics.navigation.trendsComparison'),
         description: t('analytics.trends.subtitle'),
+        docsPath: '/stats/analytics-reports/#trends-comparison',
         to: { name: ROUTES_NAMES.analyticsTrendsComparison },
         icon: TrendingUpIcon,
       },
@@ -203,6 +208,7 @@ const sections = computed<NavSection[]>(() => [
         name: 'cash-flow',
         label: t('analytics.navigation.cashFlow'),
         description: t('analytics.cashFlow.subtitle'),
+        docsPath: '/stats/analytics-reports/#cash-flow',
         to: { name: ROUTES_NAMES.analyticsCashFlow },
         icon: DollarSignIcon,
       },
@@ -210,6 +216,7 @@ const sections = computed<NavSection[]>(() => [
         name: 'net-worth-history',
         label: t('analytics.navigation.netWorthHistory'),
         description: t('netWorthHistory.subtitle'),
+        docsPath: '/stats/analytics-reports/#net-worth-history',
         to: { name: ROUTES_NAMES.analyticsNetWorthHistory },
         icon: ChartLineIcon,
       },
@@ -217,6 +224,7 @@ const sections = computed<NavSection[]>(() => [
         name: 'pivot-report',
         label: t('analytics.navigation.pivotReport'),
         description: t('pivotReport.subtitle'),
+        docsPath: '/stats/analytics-reports/#pivot',
         to: { name: ROUTES_NAMES.analyticsPivotReport },
         icon: TableIcon,
       },
@@ -246,6 +254,13 @@ const sections = computed<NavSection[]>(() => [
         description: t('analytics.investmentCalculator.subtitle'),
         to: { name: ROUTES_NAMES.analyticsInvestmentCalculator },
         icon: CalculatorIcon,
+      },
+      {
+        name: 'fire',
+        label: t('analytics.navigation.fire'),
+        description: t('analytics.fire.subtitle'),
+        to: { name: ROUTES_NAMES.analyticsFire },
+        icon: FlameIcon,
       },
     ],
   },

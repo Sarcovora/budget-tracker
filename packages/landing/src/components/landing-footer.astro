@@ -1,7 +1,7 @@
 ---
-const currentYear = new Date().getFullYear();
+import { GITHUB_URL } from '@/lib/github-api';
 
-const GITHUB_URL = 'https://github.com/letehaha/budget-tracker';
+const currentYear = new Date().getFullYear();
 
 const columns = [
   {
@@ -17,6 +17,7 @@ const columns = [
   {
     title: 'Resources',
     links: [
+      { label: 'Docs', href: 'https://docs.moneymatter.app' },
       { label: 'GitHub', href: GITHUB_URL, track: 'landing_github_clicked' },
       { label: 'Self-Host Guide', href: `${GITHUB_URL}/tree/main/self-hosting` },
       { label: 'Roadmap', href: 'https://moneymatter.featurebase.app/dashboard/roadmap' },

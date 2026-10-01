@@ -1,7 +1,9 @@
 import { t } from '@i18n/index';
 import { ConflictError, NotFoundError } from '@js/errors';
 import PayeeIgnoredNames from '@models/payee-ignored-names.model';
+import type Payees from '@models/payees.model';
 
+import { insertOrAdopt } from '../common/run-in-savepoint';
 import { withTransaction } from '../common/with-transaction';
 import { parsePayeeName, resolveNormalizedName } from './payee-namespace';
 import { deletePayee, loadPayeeOrThrow } from './payees.service';
@@ -52,10 +54,9 @@ export const addPayeeIgnoredName = withTransaction(
       await deletePayee({ userId, id: hit.payeeId });
     }
 
-    return PayeeIgnoredNames.create({
-      userId,
-      normalizedName: normalized,
-      rawSample: display,
+    return insertOrAdopt({
+      insert: () => PayeeIgnoredNames.create({ userId, normalizedName: normalized, rawSample: display }),
+      adopt: () => PayeeIgnoredNames.findOne({ where: { userId, normalizedName: normalized } }),
     });
   },
 );
@@ -90,35 +91,38 @@ interface DeleteAndIgnoreResult {
  * Idempotent on already-ignored names: bulk insert ignores duplicates by
  * pre-filtering against the existing set.
  */
+/** Adds each payee's canonical name and aliases to the ignored list, skipping names already on it. */
+export const ignorePayeeNames = async ({ userId, payees }: { userId: number; payees: Payees[] }) => {
+  const candidates = new Map<string, string>();
+  for (const payee of payees) {
+    if (!candidates.has(payee.normalizedName)) candidates.set(payee.normalizedName, payee.name);
+    for (const alias of payee.aliases ?? []) {
+      if (!candidates.has(alias.normalizedName)) candidates.set(alias.normalizedName, alias.rawName);
+    }
+  }
+
+  const existing = await PayeeIgnoredNames.findAll({
+    where: { userId, normalizedName: Array.from(candidates.keys()) },
+    attributes: ['normalizedName'],
+  });
+  const existingSet = new Set(existing.map((e) => e.normalizedName));
+
+  const toCreate = Array.from(candidates.entries())
+    .filter(([normalized]) => !existingSet.has(normalized))
+    .map(([normalized, rawSample]) => ({ userId, normalizedName: normalized, rawSample }));
+
+  if (toCreate.length > 0) {
+    await PayeeIgnoredNames.bulkCreate(toCreate, { ignoreDuplicates: true });
+  }
+
+  return { addedCount: toCreate.length };
+};
+
 export const deletePayeeAndIgnoreFuture = withTransaction(
   async ({ userId, payeeId }: DeleteAndIgnoreInput): Promise<DeleteAndIgnoreResult> => {
     const payee = await loadPayeeOrThrow({ userId, id: payeeId });
-    const aliases = payee.aliases ?? [];
-
-    const candidates = new Map<string, string>();
-    candidates.set(payee.normalizedName, payee.name);
-    for (const alias of aliases) {
-      if (!candidates.has(alias.normalizedName)) {
-        candidates.set(alias.normalizedName, alias.rawName);
-      }
-    }
-
-    const existing = await PayeeIgnoredNames.findAll({
-      where: { userId, normalizedName: Array.from(candidates.keys()) },
-      attributes: ['normalizedName'],
-    });
-    const existingSet = new Set(existing.map((e) => e.normalizedName));
-
-    const toCreate = Array.from(candidates.entries())
-      .filter(([normalized]) => !existingSet.has(normalized))
-      .map(([normalized, rawSample]) => ({ userId, normalizedName: normalized, rawSample }));
-
-    if (toCreate.length > 0) {
-      await PayeeIgnoredNames.bulkCreate(toCreate);
-    }
-
+    const result = await ignorePayeeNames({ userId, payees: [payee] });
     await deletePayee({ userId, id: payee.id });
-
-    return { addedCount: toCreate.length };
+    return result;
   },
 );

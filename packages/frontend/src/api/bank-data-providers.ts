@@ -89,6 +89,7 @@ export interface AvailableAccount {
   name: string;
   type: string;
   balance: number;
+  creditLimit: number;
   currency: string;
   metadata?: Record<string, unknown>;
 }
@@ -193,6 +194,31 @@ export const syncTransactions = async (
   accountId: string,
 ): Promise<{ message: string } | SyncJobResult> => {
   const response = await api.post(`/bank-data-providers/connections/${connectionId}/sync-transactions`, {
+    accountId,
+  });
+  return response;
+};
+
+export const syncConnection = async ({ connectionId }: { connectionId: string }): Promise<SyncResult> => {
+  const response = await api.post(`/bank-data-providers/connections/${connectionId}/sync`);
+  return response;
+};
+
+export interface ReconcileDuplicatesResult {
+  mergedCount: number;
+  skippedCount: number;
+  consideredPairs: number;
+  unresolvedCount: number;
+}
+
+export const reconcileDuplicates = async ({
+  connectionId,
+  accountId,
+}: {
+  connectionId: string;
+  accountId: string;
+}): Promise<ReconcileDuplicatesResult> => {
+  const response = await api.post(`/bank-data-providers/connections/${connectionId}/reconcile-duplicates`, {
     accountId,
   });
   return response;

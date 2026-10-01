@@ -51,7 +51,7 @@
         "transactionNote": "Transaction Note",
         "optionalNote": "Optional note",
         "effectiveDate": "Effective date",
-        "cancel": "Cancel",
+        "cancel": "Cancella",
         "confirm": "Confirm",
         "saving": "Saving...",
         "successNotification": "Balance adjusted successfully",
@@ -101,6 +101,7 @@
       "archive": {
         "title": "Archive Account",
         "description": "Archiving preserves all transactions but removes the account from your active list. Bank connections and group memberships will be disconnected.",
+        "compareOptionsLink": "Archive, exclude or delete?",
         "archiveButton": "Archive Account",
         "confirmTitle": "Archive Account",
         "confirmDescription": "Are you sure you want to archive \"{name}\"? This will:",
@@ -124,8 +125,8 @@
         "description": "Connect this system account to a bank connection for automatic transaction syncing.",
         "whatWillHappen": "What will happen:",
         "listItem1": "Account will become linked to the selected bank connection",
-        "listItem2": "Existing transactions will be converted to bank type (preserving all data)",
-        "listItem3": "If balances differ, an adjustment transaction will be created",
+        "listItem2": "Your existing transactions stay as they are",
+        "listItem3": "If balances differ, you choose how to handle the difference",
         "listItem4": "Future transactions will sync automatically",
         "dialogTitle": "Link Account to Bank Connection",
         "acceptLabel": "Link Account",
@@ -142,7 +143,13 @@
         "balanceComparison": "Current Balance Comparison:",
         "systemAccount": "System Account:",
         "externalAccount": "External Account:",
-        "adjustmentNote": "If balances differ, an adjustment transaction will be created automatically."
+        "difference": "Difference",
+        "residualTitle": "How should we handle the difference?",
+        "residualAdjustmentLabel": "Add a balance correction",
+        "residualAdjustmentDescription": "Adds one balance adjustment transaction dated today. Your past balances stay exactly as they are.",
+        "residualOpeningLabel": "Change the starting balance",
+        "residualOpeningDescription": "Moves the account's starting balance by the difference, so every past balance shifts too. Pick this if transactions are missing from the start of the history.",
+        "residualHint": "The final amount is set after the first sync, so it can differ a little from this preview."
       },
       "tabs": {
         "details": "Dettagli",
@@ -158,6 +165,11 @@
         "creditLimitUpdateError": "Failed to update credit limit",
         "save": "Save",
         "initialBalance": "Initial Balance:",
+        "editInitialBalance": "Edit initial balance",
+        "initialBalancePlaceholder": "Enter initial balance",
+        "initialBalanceHint": "Changing the initial balance also changes your current balance and your entire balance history by the same amount.",
+        "initialBalanceUpdateSuccess": "Initial balance updated",
+        "initialBalanceUpdateError": "Failed to update initial balance",
         "accountType": "Account Type:",
         "accountCategory": "Account Category:",
         "editAccountCategory": "Edit category",
@@ -203,6 +215,17 @@
         "syncStarted": "Sync started...",
         "accessForbidden": "Access forbidden",
         "failed": "Failed to sync transactions"
+      },
+      "reconcileDuplicates": {
+        "title": "Merge duplicate transactions",
+        "description": "Folds leftover pending rows into the booked transactions that replaced them.",
+        "button": "Merge duplicates",
+        "running": "Merging…",
+        "confirm": "Merge",
+        "confirmTitle": "Merge duplicate transactions?",
+        "confirmDescription": "Pending rows that match a booked transaction on this account will be deleted. Notes and categories you set on them move to the booked transaction. This cannot be undone.",
+        "result": "Merged {merged} duplicate(s), skipped {skipped}.",
+        "failed": "Failed to merge duplicates."
       },
       "relinkWarning": {
         "title": "Enable Banking: Account needs update",
@@ -318,7 +341,7 @@
         "errorNotification": "Failed to update vehicle value",
         "confirm": "Save value",
         "saving": "Saving...",
-        "cancel": "Cancel"
+        "cancel": "Cancella"
       },
       "overrideHistory": {
         "title": "Override history",

@@ -3,7 +3,8 @@
     "editMode": {
       "customize": "Налаштувати",
       "addWidgets": "Додати віджети",
-      "emptyState": "Натисніть Налаштувати, щоб додати віджети"
+      "emptyState": "Натисніть Налаштувати, щоб додати віджети",
+      "removeWidget": "Видалити віджет"
     },
     "widgets": {
       "common": {
@@ -112,7 +113,8 @@
             "3": "Останні 3 місяці",
             "6": "Останні 6 місяців",
             "12": "Останні 12 місяців"
-          }
+          },
+          "showStrip": "Показувати графік на 30 днів"
         }
       },
       "categoryTracker": {
@@ -124,6 +126,7 @@
         "title": "Грошовий потік",
         "description": "Показує ваші чисті заощадження: дохід мінус витрати за обраний період, з трендом попередніх періодів",
         "vsPrevious": "vs попередній",
+        "notAvailable": "Н/Д",
         "income": "Дохід",
         "expenses": "Витрати",
         "saved": "Заощаджено",
@@ -166,9 +169,8 @@
       },
       "plannedOverview": {
         "title": "Заплановані",
-        "projectedTotal": "Прогнозований баланс",
-        "pendingCount": "{count} запланований запис | {count} заплановані записи | {count} запланованих записів",
-        "through": "До {date}",
+        "projectedBy": "Прогнозовано на {date}",
+        "upcoming": "Майбутні · {count}",
         "loadFailed": "Не вдалося завантажити заплановані транзакції"
       },
       "emptyState": "Немає даних за вибраний період часу.",
@@ -208,6 +210,10 @@
         "plannedOverview": {
           "name": "Огляд запланованих",
           "description": "Непідтверджені заплановані транзакції та ваш прогнозований баланс"
+        },
+        "fireProgress": {
+          "name": "Прогрес FIRE",
+          "description": "Наскільки ви близькі до фінансової незалежності"
         }
       }
     },
@@ -224,13 +230,18 @@
   },
   "widgets": {
     "subscriptionsOverview": {
-      "upcoming": {
-        "collapsed": "Найближчих платежів: {count}",
-        "collapsedAction": "Відкрити"
+      "payAction": "Позначити як сплачено",
+      "listTitle": "Найближчі",
+      "dueCount": "До сплати: {count}",
+      "nothingDue": "Найближчі 3 дні без платежів",
+      "overdueHint": "Прострочено з {date}",
+      "dueSoonHint": "Строк оплати протягом 3 днів",
+      "strip": {
+        "title": "Наступні 30 днів",
+        "goingOut": "Витрати: {amount}",
+        "today": "Сьогодні"
       },
-      "empty": "Все сплачено — найближчі 3 дні без платежів.",
-      "overdueBadge": "Прострочено",
-      "payAction": "Позначити як сплачено"
+      "loadFailed": "Не вдалося завантажити регулярні платежі"
     },
     "latestRecords": {
       "config": {
@@ -248,11 +259,65 @@
         "excludeBalanceAdjustmentsDescription": "Приховати транзакції коригування балансу",
         "plannedTitle": "Заплановані транзакції",
         "excludePlannedDescription": "Приховати непідтверджені заплановані транзакції зі списку",
-        "nothingExcluded": "Нічого не виключено"
+        "nothingExcluded": "Нічого не виключено",
+        "tagsStyleTitle": "Теги",
+        "tagsStyleNames": "Назви",
+        "tagsStyleBars": "Смужки",
+        "tagsStyleSaveError": "Не вдалося зберегти стиль тегів. Спробуйте ще раз."
       },
       "overdueBadge": "Прострочено",
       "scheduledBadge": "Заплановано",
       "payAction": "Позначити як сплачено"
+    },
+    "fireProgress": {
+      "title": "Прогрес FIRE",
+      "config": {
+        "style": {
+          "label": "Стиль",
+          "ring": "Кільце",
+          "numbers": "Цифри"
+        }
+      },
+      "openPlan": "Відкрити план FIRE",
+      "loadFailed": "Не вдалося завантажити прогрес FIRE.",
+      "toType": "до {type}",
+      "ringLabelFor": "Ціль {type} досягнуто на {pct}%, залишилось {duration}",
+      "ringLabelReachedFor": "Ціль {type} досягнуто",
+      "ringLabelUnreachableFor": "Ціль {type} досягнуто на {pct}%, недосяжно за вашого поточного темпу",
+      "timeTo": "Час до {type}",
+      "unitYears": "{n} рік | {n} роки | {n} років",
+      "unitMonths": "{n} місяць | {n} місяці | {n} місяців",
+      "atAge": "у віці {age}",
+      "nextMilestone": "Наступний етап",
+      "saved": "Накопичено",
+      "progress": "Прогрес",
+      "coastFire": "Coast FIRE",
+      "reached": "Досягнуто",
+      "milestoneIn": "{pct}% через {duration}",
+      "typeNumber": "Число {type}",
+      "atRate": "за ставки {rate}%",
+      "milestonesReached": "{n} з {total} етапів",
+      "balanceOfTarget": "{balance} з {target}",
+      "reachedType": "{type} досягнуто",
+      "supports": "Забезпечує {amount}/міс",
+      "pctOfSpending": "{pct}% витрат",
+      "unreachable": "Недосяжно за поточних заощаджень",
+      "needs": "Потрібно близько {amount}/міс, щоб досягти цілі за {duration}",
+      "chart": {
+        "today": "Сьогодні",
+        "typeTarget": "{type} · {amount}",
+        "ariaLabel": "Шлях чистого капіталу: фактична історія до сьогодні, прогноз до вашого числа FIRE"
+      },
+      "setup": {
+        "title": "Сплануйте свій шлях до FIRE",
+        "description": "Використовує ваші рахунки та витрати. Якщо даних ще немає, достатньо двох чисел.",
+        "action": "Налаштувати"
+      },
+      "locked": {
+        "title": "Сплануйте свій шлях до FIRE",
+        "description": "Функція Plus",
+        "action": "Розблокувати"
+      }
     }
   }
 }

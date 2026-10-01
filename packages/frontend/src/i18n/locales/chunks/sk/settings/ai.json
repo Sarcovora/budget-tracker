@@ -1,271 +1,276 @@
 {
   "settings": {
     "ai": {
-      "title": "AI Settings",
-      "description": "Configure AI-powered features like automatic transaction categorization",
+      "title": "Nastavenia AI",
+      "description": "Vyberte, ktorý model AI má poháňať jednotlivé funkcie, pridajte si vlastné modely a pripojte k svojim údajom AI aplikácie ako Claude alebo ChatGPT.",
       "tabs": {
-        "features": "AI Features",
-        "apiKeys": "API Keys",
-        "invalidKeysTooltip": "One or more API keys are invalid",
-        "customEndpoints": "Custom endpoints",
-        "invalidEndpointsTooltip": "One or more custom endpoints are no longer working"
+        "features": "Funkcie AI",
+        "models": "Modely AI",
+        "connectedApps": "Konektory (MCP)",
+        "invalidConnectionsTooltip": "Jeden z vašich modelov AI vyžaduje pozornosť"
       },
-      "apiKeyManager": {
-        "title": "API Keys",
-        "description": "Add your own API keys to use specific providers",
+      "credentialStatus": {
+        "validated": "Overené pred {timeAgo}",
+        "failed": "Zlyhalo pred {timeAgo}",
+        "invalidBadge": "Neplatné"
+      },
+      "features": {
+        "title": "Funkcie AI",
+        "description": "Nastavte, ktorý model sa má použiť pre jednotlivé funkcie využívajúce AI",
+        "howItWorks": "Ako to funguje",
+        "loadError": "Vaše funkcie AI sa nepodarilo načítať."
+      },
+      "categorization": {
+        "howItWorks": {
+          "points": {
+            "autoSync": "Pri synchronizácii transakcií z banky sa nezaradené transakcie automaticky odošlú na zaradenie do kategórií pomocou AI.",
+            "analysis": "AI analyzuje popisy transakcií a názvy obchodníkov a navrhne vhodné kategórie z vášho existujúceho zoznamu kategórií.",
+            "override": "Kategórie navrhnuté AI môžete kedykoľvek ručne zmeniť."
+          }
+        }
+      },
+      "statementParsing": {
+        "howItWorks": {
+          "points": {
+            "upload": "Nahrajte bankový výpis (PDF, CSV alebo TXT) a AI automaticky vyťaží všetky transakcie.",
+            "analysis": "AI analyzuje štruktúru dokumentu a identifikuje dátumy, popisy, sumy a typy transakcií.",
+            "review": "Pred importom do účtu si môžete vyťažené údaje prezrieť a opraviť.",
+            "cost": "Cena sa odhaduje pred spracovaním, ide však len o približný odhad."
+          }
+        }
+      },
+      "modelSelector": {
+        "placeholder": "Vyberte model",
+        "automaticOption": "Automaticky",
+        "automaticOptionWithTarget": "Automaticky · {target}",
+        "serverOption": "MoneyMatter AI · v cene",
+        "connectionOption": "{name} · {model}",
+        "connectionOptionNeedsAttention": "{name} · {model} (vyžaduje pozornosť)",
         "badges": {
-          "default": "Default"
+          "yourKey": "Váš kľúč",
+          "yourKeyTooltip": "Beží na jednom z vašich vlastných modelov AI. Účtuje vám priamo váš poskytovateľ a MoneyMatter používanie nijako neobmedzuje.",
+          "server": "Server",
+          "serverTooltip": "Beží na MoneyMatter AI, zahrnutom vo vašom pláne. Platia limity používania."
         },
-        "buttons": {
-          "setDefault": "Set as Default"
+        "sharedPoolNote": "Vo vašom súčasnom pláne beží zahrnutý model v zdieľanom fonde, preto pri vysokom celkovom dopyte môžu platiť limity. {link} a vyhnite sa im.",
+        "sharedPoolNoteLink": "Prejdite na Plus",
+        "modelLabel": "Model",
+        "modelInfo": {
+          "estimatedCost": "Odh. cena:",
+          "per100Transactions": "na 100 transakcií"
         },
-        "invalidKeyHelp": "Add a new key below to replace this one, or remove it if you no longer need it.",
-        "deleteDialog": {
-          "title": "Remove API key?",
-          "description": "Are you sure you want to remove the {provider} API key?",
-          "descriptionMultiple": "AI features currently using {provider} will switch to another available provider.",
-          "cancel": "Cancel",
-          "remove": "Remove"
+        "notifications": {
+          "updateSuccess": "Model bol úspešne aktualizovaný",
+          "updateFailed": "Model sa nepodarilo aktualizovať",
+          "resetSuccess": "Obnoviť na predvolený model",
+          "resetFailed": "Model sa nepodarilo obnoviť"
         },
-        "allConfigured": "All providers are set up",
+        "empty": {
+          "title": "Zatiaľ žiadny model AI",
+          "description": "Ak chcete túto funkciu používať, pridajte vlastný model AI."
+        },
+        "allConnectionsDown": "Všetky vaše modely AI vyžadujú pozornosť, preto je táto funkcia pozastavená. Opravte niektorý v {link}.",
+        "allConnectionsDownLink": "Modely AI"
+      },
+      "modelGuide": {
+        "trigger": "Ktorý model sa hodí?",
+        "tierHeading": "Postačí model {tier}",
+        "tiers": {
+          "light": "Ľahký",
+          "balanced": "Vyvážený",
+          "smart": "Inteligentný"
+        },
+        "needsLabel": "Vyžaduje",
+        "picksLabel": "Dobrá voľba",
+        "yourModel": "Váš model",
+        "source": "Podrobnosti o modeli z models.dev",
+        "needs": {
+          "textOnly": "Len text",
+          "runsOften": "Spúšťa sa pri každej synchronizácii",
+          "longAnswers": "Dlhé odpovede",
+          "readsFiles": "Číta obrázky a PDF",
+          "structuredAnswers": "Štruktúrované odpovede"
+        },
+        "why": {
+          "categorization": "Krátka, opakujúca sa úloha. Malý model si s ňou dobre poradí a udrží nízke náklady.",
+          "statementParsing": "Prečíta celý výpis a vráti každý riadok, preto potrebuje model, ktorý si udrží presnosť aj pri dlhom texte.",
+          "investmentTransactionsParsing": "Prevádza exporty od brokera na riadky nákupov a predajov. Dlhé exporty vyžadujú model schopný písať dlhé odpovede.",
+          "receiptParsing": "Model si prezerá priamo súbor faktúry, preto musí vedieť čítať obrázky a PDF."
+        },
+        "picks": {
+          "categorization": "Gemini Flash Lite · Claude Haiku",
+          "statementParsing": "Gemini Flash · Claude Sonnet · GPT Terra",
+          "investmentTransactionsParsing": "Gemini Flash · Claude Sonnet",
+          "receiptParsing": "Gemini Flash · Claude Sonnet"
+        },
+        "verdict": {
+          "fit": "Dobre vyhovuje",
+          "gaps": "{count} nedostatok | {count} nedostatkov",
+          "unknown": "Neoverené"
+        },
+        "warning": {
+          "readsFiles": "Nevie čítať súbory",
+          "readsText": "Nevie čítať text",
+          "readsImages": "Nevie čítať obrázky",
+          "readsPdfs": "Nevie čítať PDF",
+          "longAnswers": "Len krátke odpovede",
+          "structuredAnswers": "Bez štruktúrovaných odpovedí"
+        },
+        "checks": {
+          "readsText": {
+            "label": "Číta text",
+            "fail": "Tento model nedokáže spracovať text."
+          },
+          "readsImages": {
+            "label": "Číta obrázky",
+            "fail": "Súbory s obrázkami nebudú fungovať."
+          },
+          "readsPdfs": {
+            "label": "Číta PDF",
+            "fail": "Súbory PDF nebudú fungovať."
+          },
+          "longAnswers": {
+            "label": "Dlhé odpovede",
+            "ok": "Napíše až {tokens} tokenov.",
+            "fail": "Napíše len {tokens} tokenov, preto sa dlhé súbory orežú."
+          },
+          "structuredAnswers": {
+            "label": "Štruktúrované odpovede",
+            "fail": "Jeho odpovede sa môžu vrátiť vo formáte, ktorý aplikácia nedokáže spracovať."
+          }
+        },
+        "unknown": {
+          "title": "Tento model sa nedá overiť",
+          "detail": "models.dev momentálne nemá podrobnosti o tomto modeli, preto ho nemôžeme overiť. Uistite sa, že spĺňa požiadavky uvedené vyššie."
+        }
+      },
+      "connections": {
+        "title": "Modely AI",
+        "description": "Pripojte OpenAI, Claude, Gemini, OpenRouter alebo lokálny model. Každá položka predstavuje jeden model, ktorý môžete vybrať pre ľubovoľnú funkciu.",
+        "tip": {
+          "ariaLabel": "O modeloch AI",
+          "text": "Toho istého poskytovateľa môžete pridať aj viackrát s rôznymi modelmi. Pomenujte ich podľa toho, ako sú výkonné, napríklad „Claude inteligentný“ a „Claude rýchly“, a potom pre každú funkciu vyberte ten správny."
+        },
+        "addButton": "Pridať model",
+        "capReached": "Dosiahli ste limit {max} modelov AI. Ak chcete pridať ďalší, jeden odstráňte.",
+        "duplicateName": "Kópia {name}",
+        "empty": {
+          "title": "Zatiaľ žiadne modely AI",
+          "description": "Pridajte model s vlastným API kľúčom, alebo pripojte lokálny model, napríklad Ollama či LM Studio."
+        },
+        "loadError": {
+          "title": "Vaše modely AI sa nepodarilo načítať",
+          "description": "Vaše uložené modely sú stále k dispozícii. Skontrolujte pripojenie a skúste to znova."
+        },
+        "badges": {
+          "default": "Predvolený",
+          "defaultSkipped": "Predvolený · preskočený, kým vyžaduje pozornosť"
+        },
+        "status": {
+          "model": "{provider} · {model}"
+        },
+        "actions": {
+          "menuAriaLabel": "Akcie modelu AI",
+          "duplicate": "Duplikovať",
+          "setDefault": "Nastaviť ako predvolený",
+          "remove": "Odstrániť",
+          "reconnect": "Pripojiť znova",
+          "enterKey": "Zadajte API kľúč"
+        },
+        "removeDialog": {
+          "title": "Odstrániť tento model AI?",
+          "description": "Odstráni sa „{name}“ aj jeho uložený API kľúč.",
+          "pinnedFeatures": "Tieto funkcie sa prepnú na automatické: {features}.",
+          "confirm": "Odstrániť"
+        },
+        "removeKeyDialog": {
+          "title": "Odstrániť API kľúč?",
+          "description": "Požiadavky na tento model sa budú odosielať bez kľúča. Servery, ktoré ho vyžadujú, prestanú odpovedať.",
+          "confirm": "Odstrániť kľúč"
+        },
+        "test": {
+          "success": "Pripojené. Model odpovedal.",
+          "failed": "Model sa nepodarilo osloviť."
+        },
+        "notifications": {
+          "saveSuccess": "Model AI uložený",
+          "saveFailed": "Model AI sa nepodarilo uložiť",
+          "removeSuccess": "Model AI odstránený",
+          "removeFailed": "Model AI sa nepodarilo odstrániť",
+          "setDefaultSuccess": "„{name}“ je teraz váš predvolený model",
+          "setDefaultFailed": "Predvolený model sa nepodarilo zmeniť",
+          "removeKeySuccess": "API kľúč odstránený",
+          "removeKeyFailed": "API kľúč sa nepodarilo odstrániť",
+          "removeKeyInvalid": "API kľúč odstránený, model však prestal odpovedať: {reason}",
+          "editedConnectionGone": "Tento model AI bol medzitým odstránený inde, preto sa formulár zatvoril."
+        },
         "form": {
-          "titleAdd": "Add API Key",
-          "titleAddAnother": "Add Another Provider",
-          "providerLabel": "Provider",
-          "apiKeyLabel": "API Key",
-          "buttonSaving": "Validating...",
-          "buttonSave": "Save Key"
+          "titleAdd": "Pridať model AI",
+          "titleEdit": "Upraviť model AI",
+          "titleDuplicate": "Duplikovať model AI",
+          "providerLabel": "Poskytovateľ",
+          "providerPlaceholder": "Vyberte poskytovateľa",
+          "nameLabel": "Názov",
+          "baseUrlLabel": "Základná URL adresa",
+          "baseUrlPlaceholder": "https://priklad.com/v1",
+          "apiKeyLabel": "API kľúč",
+          "apiKeyPlaceholder": "Vložte svoj API kľúč",
+          "apiKeyGetHint": "Kľúč získate na {link}.",
+          "apiKeyOptionalHint": "Voliteľné. Nechajte prázdne, ak váš server kľúč nevyžaduje.",
+          "apiKeySavedHint": "Ak chcete zachovať uložený kľúč, nechajte prázdne.",
+          "apiKeyBorrowedHint": "Používa kľúč z „{name}“. Ak chcete použiť iný, zadajte nový kľúč.",
+          "removeApiKeyButton": "Odstrániť API kľúč",
+          "modelLabel": "Model",
+          "modelPlaceholder": "Zadajte alebo vyberte model",
+          "modelListEmpty": "Nie je z čoho vyberať. Zadajte názov modelu, ktorý váš server používa.",
+          "modelListNoMatch": "Žiadny uvedený model nezodpovedá. Zadaný názov môžete napriek tomu použiť.",
+          "testButton": "Otestovať pripojenie",
+          "saveButton": "Uložiť zmeny",
+          "localNetworkOnly": "MoneyMatter sa nedostane k serveru na vašom vlastnom počítači, ako je {hostname} alebo {ip}. Sprístupnite ho cez tunel, napríklad ngrok alebo Cloudflare Tunnel a sem vložte URL adresu tunela.",
+          "dockerHost": "Ak túto aplikáciu prevádzkujete v Dockeri na rovnakom počítači ako server modelu, použite namiesto {ip} {dockerHost}."
         },
-        "providers": {
+        "presets": {
+          "openai": {
+            "label": "OpenAI",
+            "namePlaceholder": "napr. GPT rýchly"
+          },
           "anthropic": {
             "label": "Anthropic (Claude)",
-            "placeholder": "sk-ant-...",
-            "description": "Get your API key from"
-          },
-          "openai": {
-            "label": "OpenAI (GPT)",
-            "placeholder": "sk-...",
-            "description": "Get your API key from"
+            "namePlaceholder": "napr. Claude inteligentný"
           },
           "google": {
             "label": "Google (Gemini)",
-            "placeholder": "AIza...",
-            "description": "Get your API key from"
+            "namePlaceholder": "napr. Gemini rýchly"
           },
-          "groq": {
-            "label": "Groq (Llama, GPT-OSS)",
-            "placeholder": "gsk_...",
-            "description": "Get your API key from"
-          }
-        },
-        "notifications": {
-          "saveSuccess": "API key saved and validated successfully",
-          "saveFailed": "API key is not working. Please verify the key is correct, has sufficient credits, and has the required permissions.",
-          "setDefaultSuccess": "{provider} set as default",
-          "setDefaultFailed": "Failed to set default provider",
-          "removeSuccess": "{provider} API key removed",
-          "removeFailed": "Failed to remove API key"
-        }
-      },
-      "credentialStatus": {
-        "validated": "Validated {timeAgo}",
-        "failed": "Failed {timeAgo}",
-        "invalidBadge": "Invalid"
-      },
-      "features": {
-        "title": "AI Features",
-        "description": "Configure which model to use for each AI-powered feature",
-        "loading": "Loading features..."
-      },
-      "categorization": {
-        "modelHint": {
-          "trigger": "What model should I choose?",
-          "text": "For transaction categorization, low-cost models like Gemma 4, Gemini 3.5 Flash Lite, or Claude Haiku 4.5 are recommended. Categorization is a straightforward task that doesn't require expensive reasoning models. Using cheaper models lets you process more transactions at lower cost."
-        },
-        "howItWorks": {
-          "title": "How it works",
-          "points": {
-            "autoSync": "When you sync transactions from your bank, uncategorized transactions are automatically sent to AI for categorization.",
-            "analysis": "The AI analyzes transaction descriptions and merchant names to suggest appropriate categories from your existing category list.",
-            "override": "You can always manually override AI-suggested categories."
-          }
-        },
-        "loading": "Loading models..."
-      },
-      "statementParsing": {
-        "modelHint": {
-          "trigger": "What model should I choose?",
-          "text": "For statement parsing, mid-tier models like Gemini 3.6 Flash, Claude Sonnet 5, or GPT-5.6 Terra are recommended. Statement parsing requires understanding complex document structures and extracting accurate data, which benefits from more capable models. However, cheaper models like Gemini 3.5 Flash Lite or Claude Haiku 4.5 can also work well for simpler statements."
-        },
-        "howItWorks": {
-          "title": "How it works",
-          "points": {
-            "upload": "Upload a bank statement (PDF, CSV, or TXT) and AI will extract all transactions automatically.",
-            "analysis": "The AI analyzes the document structure to identify dates, descriptions, amounts, and transaction types.",
-            "review": "You can review and correct any extracted data before importing into your account.",
-            "cost": "Cost is estimated before processing, yet it only reflects the approximate cost."
-          }
-        },
-        "loading": "Loading models..."
-      },
-      "modelSelector": {
-        "badges": {
-          "yourKey": "Your key",
-          "yourKeyTooltip": "This feature uses your personal API key. You have full control over usage and costs, with no rate limits from our server.",
-          "server": "Server",
-          "serverTooltip": "This feature uses our server's shared API key. It's free but may have rate limits during high demand. Add your own API key for unlimited access."
-        },
-        "modelLabel": "Model",
-        "resetButton": "Reset to Default",
-        "noApiKey": "(No API key)",
-        "modelInfo": {
-          "context": "Context:",
-          "capabilities": "Capabilities:",
-          "estimatedCost": "Est. cost:",
-          "per100Transactions": "per 100 txns"
-        },
-        "rateLimitWarning": "Using server-provided AI with free-tier rate limiting. Feature availability depends on demand from other users. For reliable access, add your own API key in the API Keys tab.",
-        "groupLabels": {
-          "recommended": "⭐ Recommended",
-          "openai": "OpenAI",
-          "anthropic": "Anthropic",
-          "google": "Google",
-          "groq": "Groq"
-        },
-        "costLabels": {
-          "free": "Free",
-          "low": "Low cost",
-          "medium": "Medium cost",
-          "high": "High cost"
-        },
-        "capabilities": {
-          "textGeneration": "Text",
-          "structuredOutput": "Structured",
-          "functionCalling": "Functions",
-          "vision": "Vision",
-          "fastInference": "Fast",
-          "agents": "Agents"
-        },
-        "notifications": {
-          "updateSuccess": "Model updated successfully",
-          "updateFailed": "Failed to update model",
-          "resetSuccess": "Reset to default model",
-          "resetFailed": "Failed to reset model"
-        },
-        "addKeyHint": "Add your own API key to select from all available models.",
-        "addKeyHintLink": "Add API key →",
-        "customModel": {
-          "nameLabel": "Model name",
-          "applyButton": "Apply",
-          "hint": "Sent as-is to {baseUrl}.",
-          "endpointOption": "{endpoint} — {model}",
-          "unknownEndpoint": "Custom endpoint",
-          "missingModelName": "This endpoint has no model name configured — enter one first",
-          "endpointsLoadError": "Your endpoints could not be loaded, so the model name can't be edited right now."
-        }
-      },
-      "customEndpoint": {
-        "title": "Custom endpoints",
-        "description": "Connect your own OpenAI-compatible servers and use their models for any AI feature.",
-        "loading": "Loading endpoints…",
-        "addButton": "Add endpoint",
-        "empty": {
-          "title": "No custom endpoints yet",
-          "description": "Connect an OpenAI-compatible server — a local Ollama, LM Studio, or a hosted gateway — to use its models for any AI feature."
-        },
-        "loadError": {
-          "title": "Couldn't load your endpoints",
-          "description": "Your saved endpoints are still there — we just couldn't fetch them right now. Check your connection and try again.",
-          "retry": "Try again"
-        },
-        "status": {
-          "model": "Model: {model}"
-        },
-        "actions": {
-          "menuAriaLabel": "Endpoint actions",
-          "reconnect": "Reconnect"
-        },
-        "form": {
-          "titleAdd": "Add endpoint",
-          "titleEdit": "Edit endpoint",
-          "nameLabel": "Name",
-          "namePlaceholder": "Home Ollama",
-          "baseUrlLabel": "Base URL",
-          "baseUrlPlaceholder": "http://localhost:11434/v1",
-          "modelLabel": "Model name",
-          "modelPlaceholder": "llama3.2",
-          "apiKeyLabel": "API key (optional)",
-          "apiKeyPlaceholder": "Enter API key",
-          "apiKeySavedHint": "A key is saved. Leave blank to keep it.",
-          "apiKeyOptionalHint": "Leave blank if your endpoint needs no authentication.",
-          "removeApiKeyButton": "Remove saved key",
-          "saveButton": "Save",
-          "testButton": "Test connection",
-          "removeButton": "Remove"
-        },
-        "compatibilityHint": "The endpoint must be OpenAI-compatible. Works with Ollama, vLLM, OpenRouter, LM Studio, and any /v1 proxy.",
-        "test": {
-          "success": "Connection successful.",
-          "failed": "Could not reach the endpoint."
-        },
-        "notifications": {
-          "saveSuccess": "Custom endpoint saved",
-          "saveFailed": "Failed to save the custom endpoint",
-          "removeSuccess": "Custom endpoint removed",
-          "removeFailed": "Failed to remove the custom endpoint",
-          "removeKeySuccess": "Saved key removed",
-          "removeKeyFailed": "Failed to remove the saved key",
-          "removeKeyInvalid": "API key removed, but the endpoint failed validation without it: {reason}",
-          "editedEndpointGone": "This endpoint was removed, so the editor was closed."
-        },
-        "removeDialog": {
-          "title": "Remove custom endpoint?",
-          "descriptionNamed": "\"{name}\" will be removed. Any feature using it falls back to another available model. This action cannot be undone.",
-          "confirm": "Remove"
-        },
-        "removeKeyDialog": {
-          "title": "Remove saved key?",
-          "description": "The endpoint is re-tested without a key. If it requires authentication, the change is rejected.",
-          "confirm": "Remove key"
-        },
-        "setupHelp": {
-          "trigger": "Where do I find these?",
-          "rule": "The Base URL is everything up to, but not including, {path}. For almost every provider that means it ends in {suffix}.",
-          "ruleCheck": "Quick check: opening {url} should return a JSON list of models.",
-          "apiKeyEmpty": "Leave empty.",
-          "lmStudio": {
-            "startServer": "Start the local server first (Developer tab → Start Server).",
-            "baseUrl": "The address LM Studio shows, plus {suffix}. For example {example}.",
-            "model": "The model's API identifier. It's shown in the Developer tab, or listed at {url}."
+          "openrouter": {
+            "label": "OpenRouter",
+            "namePlaceholder": "napr. OpenRouter Llama"
           },
           "ollama": {
-            "model": "The exact tag from {command}, for example {example}."
+            "label": "Ollama",
+            "namePlaceholder": "napr. Lokálna Llama"
           },
-          "openRouter": {
-            "model": "The full model id from their models page, for example {example}.",
-            "apiKeyRequired": "Required."
+          "lmStudio": {
+            "label": "LM Studio",
+            "namePlaceholder": "napr. LM Studio Qwen"
           },
-          "other": {
-            "tabLabel": "Other",
-            "title": "{name} or any other OpenAI-compatible server",
-            "baseUrl": "The server address, plus {suffix}.",
-            "model": "Whatever {request} returns as the {field}.",
-            "apiKey": "Only if the server was set up to require one."
-          },
-          "localNetworkOnly": "A server running on your own computer ({ip} or {hostname}) only works when this app runs on your own machine or your own network. The hosted version can't reach it, because private addresses are blocked there.",
-          "dockerHost": "If you run this app in Docker on the same machine as the model server, use {dockerHost} instead of {ip}."
+          "custom": {
+            "label": "Vlastný (kompatibilný s OpenAI)",
+            "namePlaceholder": "napr. Môj server"
+          }
         }
       },
       "customInstructions": {
-        "title": "Custom Instructions",
-        "description": "Provide context to help AI categorize your transactions. These instructions are included when categorizing transactions during bank sync and manual import.",
-        "placeholder": "e.g., Transactions from 'Starbucks' should be 'Coffee'. My freelance income comes from 'Acme Corp'.",
-        "requiresOwnCredentials": "Add your own API key or a custom endpoint to use custom instructions.",
-        "credentialsCheckFailed": "We couldn't check whether you have your own AI credentials. Try again to unlock custom instructions.",
-        "retryCredentialsCheck": "Try again",
-        "save": "Save",
-        "saved": "Saved!",
-        "saveFailed": "Failed to save custom instructions. Please try again."
+        "title": "Vlastné pokyny",
+        "description": "Poskytnite kontext, ktorý AI pomôže pri zaraďovaní vašich transakcií do kategórií. Tieto pokyny sa zohľadnia pri zaraďovaní transakcií počas bankovej synchronizácie aj ručného importu.",
+        "placeholder": "napr. Transakcie od „Starbucks“ by mali patriť do kategórie „Káva“. Môj príjem z voľnej nohy pochádza od „Acme Corp“.",
+        "serverModelHint": "Vlastné pokyny sa uplatnia len vtedy, keď kategorizáciu vykonáva jeden z vašich vlastných modelov AI. Vyberte ho vyššie.",
+        "requiresOwnCredentials": "Ak chcete používať vlastné pokyny, pridajte si vlastný model AI.",
+        "credentialsCheckFailed": "Vaše modely AI sa nepodarilo overiť, preto sú vlastné pokyny momentálne nedostupné.",
+        "retryCredentialsCheck": "Skúsiť znova",
+        "save": "Uložiť",
+        "saved": "Uložené!",
+        "saveFailed": "Vlastné pokyny sa nepodarilo uložiť. Skúste to znova, prosím."
       }
     }
   }

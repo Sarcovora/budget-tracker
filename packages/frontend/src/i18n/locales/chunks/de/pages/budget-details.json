@@ -20,9 +20,9 @@
     },
     "budgetDetails": {
       "notSet": "Not set",
-      "saving": "Wird gespeichert …",
-      "saveChanges": "Save Changes",
-      "loading": "Wird geladen...",
+      "saving": "Speichern...",
+      "saveChanges": "Änderungen speichern",
+      "loading": "Laden...",
       "uncategorized": "Uncategorized",
       "stats": {
         "income": "Einnahmen",
@@ -53,7 +53,7 @@
         "noDataDescription": "There's no spending data available for this budget yet.",
         "noCategoryData": "No category spending data.",
         "noTimelineData": "No timeline data.",
-        "total": "Total",
+        "total": "Gesamt",
         "income": "Einnahmen",
         "expenses": "Expenses",
         "incomeLabel": "Income:",
@@ -67,8 +67,8 @@
         "pendingHeading": "Ausstehende Einladungen",
         "loadError": "Couldn't load members.",
         "permissions": {
-          "read": "View only",
-          "write": "Attach own transactions",
+          "read": "Nur anzeigen",
+          "write": "Eigene Transaktionen hinzufügen",
           "manage": "Verwalten"
         },
         "member": {

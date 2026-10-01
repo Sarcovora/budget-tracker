@@ -6,7 +6,7 @@ import { useLogout } from '@/composable/actions/logout';
 import { cn } from '@/lib/utils';
 import { ROUTES_NAMES } from '@/routes/constants';
 import { useUserStore } from '@/stores';
-import { ChevronUpIcon, ExternalLinkIcon, LogOutIcon, UserIcon } from '@lucide/vue';
+import { BookOpenIcon, ChevronUpIcon, ExternalLinkIcon, LogOutIcon, UserIcon } from '@lucide/vue';
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -59,6 +59,14 @@ const isRealCommit = /^[0-9a-f]{40}$/.test(commitHash);
           </UiButton>
         </router-link>
 
+        <a :href="config.docsUrl" target="_blank" rel="noopener noreferrer" @click="isOpen = false">
+          <UiButton variant="ghost" class="w-full justify-start gap-2 px-3" size="default">
+            <BookOpenIcon class="size-4" />
+            <span>{{ t('navigation.helpAndDocs') }}</span>
+            <ExternalLinkIcon class="text-muted-foreground ml-auto size-3" />
+          </UiButton>
+        </a>
+
         <UiButton
           variant="ghost-destructive"
           class="w-full justify-start gap-2 px-3"
@@ -85,7 +93,7 @@ const isRealCommit = /^[0-9a-f]{40}$/.test(commitHash);
     </i18n-t>
     <a
       v-if="isRealCommit"
-      :href="`https://github.com/letehaha/budget-tracker/commit/${commitHash}`"
+      :href="`https://github.com/letehaha/moneymatter/commit/${commitHash}`"
       target="_blank"
       rel="noopener noreferrer"
       class="bg-muted hover:bg-accent text-foreground flex shrink-0 items-center gap-1 rounded-md px-1.5 py-0.5 font-mono transition-colors"
